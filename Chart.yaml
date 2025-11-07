@@ -1,0 +1,5 @@
+apiVersion: v2
+name: comments-chart
+type: application
+version: {{ version }}
+appVersion: "1.0.0"
