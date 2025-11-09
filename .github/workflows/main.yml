@@ -28,7 +28,8 @@ jobs:
       
       - name: Package and Push Helm Chart
         run: |
-          sed -i "s|{{ version }}|${{ github.run_number }}|g" ./charts/Chart.yaml
-          helm package ./charts
-          helm push ./charts-${{ github.run_number }}.tgz oci://registry-1.docker.io/${{ secrets.DOCKER_USERNAME }}
+          sed -i "s|{{ version }}|${{ github.run_number }}|g" ./oc-charts/Chart.yaml
+          cat ./oc-charts/Chart.yaml
+          helm package ./oc-charts
+          helm push ./oc-charts-${{ github.run_number }}.tgz oci://registry-1.docker.io/${{ secrets.DOCKER_USERNAME }}
 
