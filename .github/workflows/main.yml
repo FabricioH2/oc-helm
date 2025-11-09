@@ -32,7 +32,3 @@ jobs:
           helm package ./charts
           helm push ./charts-${{ github.run_number }}.tgz oci://registry-1.docker.io/${{ secrets.DOCKER_USERNAME }}
 
-      - name: Deploy 
-        run: |
-          helm upgrade --install oc-frontend oci://registry-1.docker.io/${{ secrets.DOCKER_USERNAME }}/charts --version ${{ github.run_number }} --values values.yaml
-
