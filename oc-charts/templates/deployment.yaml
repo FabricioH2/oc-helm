@@ -7,7 +7,7 @@ metadata:
     app: {{ .Values.name }}
     areanegocio: tecnologia
 spec:
-  replicas: {{ .Values.replicas | default 1 }}
+  replicas: 1
   selector:
     matchLabels:
       app: {{ .Values.name }}
@@ -16,20 +16,6 @@ spec:
       labels:
         app: {{ .Values.name }}
     spec:
-      {{- if eq .Values.name "oc-database" }}
-      # SecurityContext para MongoDB (usuario mongodb, UID 999)
-      # fsGroup: 999 configura automáticamente los permisos del volumen
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 999
-        fsGroup: 999
-      {{- else }}
-      # SecurityContext genérico para otros servicios
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1001
-        fsGroup: 1001
-      {{- end }}
       containers:
         - name: contenedor-principal
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
@@ -42,20 +28,6 @@ spec:
             - name: {{ .name }}
               value: {{ .value | quote }}
             {{- end }}
-          {{- end }}
-          {{- if eq .Values.name "oc-database" }}
-          # SecurityContext específico para MongoDB
-          securityContext:
-            runAsUser: 999
-            runAsGroup: 999
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-          # Volumen para datos de MongoDB
-          volumeMounts:
-            - name: mongodb-data
-              mountPath: /data/db
           {{- end }}
           resources:
             {{- if .Values.resources }}
@@ -73,10 +45,3 @@ spec:
               cpu: "200m"
               memory: "256Mi"
             {{- end }}
-      {{- if and (eq .Values.name "oc-database") .Values.statefulset.enabled }}
-      # Volumen persistente para MongoDB
-      volumes:
-        - name: mongodb-data
-          persistentVolumeClaim:
-            claimName: {{ .Values.name }}-pvc
-      {{- end }}
