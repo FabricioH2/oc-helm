@@ -1,3 +1,4 @@
+{{- if and .Values.networkPolicies.enabled (eq .Values.name "oc-frontend") }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -44,7 +45,8 @@ spec:
       port: 5353
     - protocol: TCP
       port: 5353
-### oc-backend-api # ##
+{{- end }}
+{{- if and .Values.networkPolicies.enabled (eq .Values.name "oc-backend-api") }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -87,7 +89,8 @@ spec:
       port: 5353
     - protocol: TCP
       port: 5353
-### oc-backend-data # ##
+{{- end }}
+{{- if and .Values.networkPolicies.enabled (eq .Values.name "oc-backend-data") }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -126,7 +129,8 @@ spec:
       port: 5353
     - protocol: TCP
       port: 5353
-### oc-database # ##
+{{- end }}
+{{- if and .Values.networkPolicies.enabled (eq .Values.name "oc-database") }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -157,3 +161,4 @@ spec:
     ports:
     - protocol: UDP
       port: 53
+{{- end }}
