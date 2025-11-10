@@ -10,8 +10,9 @@ spec:
   to:
     kind: Service
     name: {{ .Values.name }}
+    weight: 100
   port:
-    targetPort: {{ .Values.service.targetPort }}
+    targetPort: http
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect

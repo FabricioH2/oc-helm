@@ -7,7 +7,8 @@ spec:
   selector:
     app: {{ .Values.name }}  # Debe coincidir con las labels del Deployment
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: {{ .Values.service.port}}         # Puerto del Service
       targetPort: {{ .Values.service.targetPort}}  # Puerto del contenedor
   type: ClusterIP     # Cambia a NodePort o LoadBalancer si quieres acceso externo
