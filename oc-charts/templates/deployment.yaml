@@ -18,14 +18,30 @@ spec:
     spec:
       containers:
         - name: contenedor-principal
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}  # <-- Reemplaza con la imagen que quieras usar
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.service.targetPort }}
+          {{- if .Values.env }}
+          env:
+            {{- range .Values.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          {{- end }}
           resources:
+            {{- if .Values.resources }}
             requests:
-              cpu: "500m"
-              memory: "800Mi"
+              cpu: {{ .Values.resources.requests.cpu | default "100m" }}
+              memory: {{ .Values.resources.requests.memory | default "128Mi" }}
             limits:
-              cpu: "1000m"
-              memory: "1500Mi"
+              cpu: {{ .Values.resources.limits.cpu | default "200m" }}
+              memory: {{ .Values.resources.limits.memory | default "256Mi" }}
+            {{- else }}
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            {{- end }}
