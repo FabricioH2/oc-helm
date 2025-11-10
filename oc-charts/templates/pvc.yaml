@@ -11,7 +11,11 @@ spec:
     requests:
       storage: {{ .Values.statefulset.storage | default "1Gi" }}
   {{- if .Values.statefulset.storageClassName }}
+  {{- if ne .Values.statefulset.storageClassName "" }}
   storageClassName: {{ .Values.statefulset.storageClassName }}
+  {{- end }}
+  {{- else }}
+  # Sin storageClassName, OpenShift usará el storage class por defecto
   {{- end }}
 {{- end }}
 
