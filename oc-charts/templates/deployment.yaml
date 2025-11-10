@@ -18,29 +18,11 @@ spec:
     spec:
       {{- if eq .Values.name "oc-database" }}
       # SecurityContext para MongoDB (usuario mongodb, UID 999)
+      # fsGroup: 999 configura automáticamente los permisos del volumen
       securityContext:
         runAsNonRoot: true
         runAsUser: 999
         fsGroup: 999
-      # InitContainer para configurar permisos del volumen antes de que MongoDB inicie
-      # Nota: Puede requerir un SCC que permita runAsUser: 0 en OpenShift
-      initContainers:
-        - name: init-mongodb-data
-          image: busybox:latest
-          command: ['sh', '-c']
-          args:
-            - |
-              # Intentar configurar permisos (puede fallar si no hay permisos de root)
-              chown -R 999:999 /data/db 2>/dev/null || true
-              chmod -R 755 /data/db 2>/dev/null || true
-              # Verificar permisos
-              ls -la /data/db || true
-          securityContext:
-            runAsUser: 0
-            allowPrivilegeEscalation: false
-          volumeMounts:
-            - name: mongodb-data
-              mountPath: /data/db
       {{- else }}
       # SecurityContext genérico para otros servicios
       securityContext:
