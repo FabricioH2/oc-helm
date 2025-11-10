@@ -93,10 +93,10 @@ spec:
   - to:
     - podSelector:
         matchLabels:
-          app: backend-data
+          app: oc-backend-data
     ports:
     - protocol: TCP
-      port: 3001
+      port: 80
   - to:
     - namespaceSelector:
         matchLabels:
@@ -125,15 +125,15 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app: backend-api
+          app: oc-backend-api
     ports:
     - protocol: TCP
-      port: 3001
+      port: 80
   egress:
   - to:
     - podSelector:
         matchLabels:
-          app: database
+          app: oc-database
     ports:
     - protocol: TCP
       port: 27017
