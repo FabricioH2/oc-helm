@@ -29,13 +29,25 @@ spec:
     - protocol: TCP
       port: 8080
   egress:
+  # Permitir tráfico HTTPS saliente a las rutas de OpenShift (para llamadas al backend-api)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          network.openshift.io/policy-group: ingress
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+  # Permitir tráfico al backend-api por nombre de servicio (dentro del cluster)
   - to:
     - podSelector:
         matchLabels:
-          app: backend-api
+          app: oc-backend-api
     ports:
     - protocol: TCP
       port: 3000
+  # Permitir DNS
   - to:
     - namespaceSelector:
         matchLabels:
